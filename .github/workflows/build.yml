@@ -1,0 +1,56 @@
+name: Android Build (APK)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: npm
+
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Expo login (non‑interactive)
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: expo login --token $EXPO_TOKEN
+
+      - name: Build Android APK with EAS
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: npx eas-cli build --platform android --profile production --non-interactive
+
+      - name: Download APK artifact
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          ARTIFACT_URL=$(eas artifacts:list --platform android --latest | grep -o 'https://.*\.apk')
+          mkdir -p ./artifacts
+          curl -L "$ARTIFACT_URL" -o ./artifacts/app-release.apk
+
+      - name: Upload APK as GitHub artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: ./artifacts/app-release.apk
+
+      - name: Publish to Google Play (optional)
+#        if: "${{ secrets.PLAY_STORE_SERVICE_ACCOUNT != '' }}"
+        env:
+          PLAY_STORE_SERVICE_ACCOUNT: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT }}
+        run: |
+          echo "$PLAY_STORE_SERVICE_ACCOUNT" > service-account.json
+          npx eas-cli submit --platform android --service-account-path service-account.json --skip-build
