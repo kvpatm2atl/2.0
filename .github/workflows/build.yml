@@ -21,7 +21,7 @@ jobs:
         run: npm install -g expo-cli
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Expo login (non‑interactive)
         env:
