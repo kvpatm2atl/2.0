@@ -230,7 +230,7 @@ export default function AdminLibrary() {
           renderItem={({ item }) => {
             const isOverdue = item.status === 'Issued' && new Date(item.due_date) < new Date();
             return (
-              <Card style={[isOverdue && { borderLeftWidth: 4, borderLeftColor: Colors.danger }]}>
+              <Card style={[styles.item, isOverdue ? { borderLeftWidth: 4, borderLeftColor: Colors.danger } : {}]}>
                 <View style={styles.row}>
                   <View style={[styles.bookIcon, { backgroundColor: item.status === 'Returned' ? Colors.successBg : isOverdue ? Colors.dangerBg : Colors.infoBg }]}>
                     <MaterialCommunityIcons

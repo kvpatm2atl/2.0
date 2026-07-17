@@ -456,7 +456,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     if (userId) {
       // Update role metadata
       await supabase.auth.updateUser({ data: { role } }).catch(() => {});
-      await supabase.from('user_profiles').update({ role }).eq('id', userId).catch(() => {});
+      try { await supabase.from('user_profiles').update({ role }).eq('id', userId); } catch {}
 
       // Auto-sync from staff_directory for @kvs.in emails
       if (email.endsWith('@kvs.in')) {
@@ -498,9 +498,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const userId = data?.user?.id;
     if (userId) {
       if (displayName) {
-        await supabase.from('user_profiles').update({ role, display_name: displayName }).eq('id', userId).catch(() => {});
+        try { await supabase.from('user_profiles').update({ role, display_name: displayName }).eq('id', userId); } catch {}
       } else {
-        await supabase.from('user_profiles').update({ role }).eq('id', userId).catch(() => {});
+        try { await supabase.from('user_profiles').update({ role }).eq('id', userId); } catch {}
       }
 
       // Try sign in to get session

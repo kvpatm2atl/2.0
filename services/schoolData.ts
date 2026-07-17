@@ -98,7 +98,7 @@ export async function fetchTodayAttendance(section: string): Promise<Record<stri
     
     const map: Record<string, boolean> = {};
     students.forEach(s => { map[s.id] = true; }); // Default all present
-    if (data) data.forEach((r: AttendanceRow) => { map[r.student_id] = r.present; });
+    if (data) data.forEach((r: any) => { map[r.student_id] = r.present; });
     
     await cacheSet(cacheKey, map);
     return map;
@@ -758,12 +758,12 @@ export async function fetchUsersByRole(role: string): Promise<any[]> {
 
 // Push notification helpers
 export async function savePushToken(userId: string, token: string): Promise<void> {
-  await supabase.from('user_profiles').update({ push_token: token }).eq('id', userId).catch(() => {});
+  try { await supabase.from('user_profiles').update({ push_token: token }).eq('id', userId); } catch {}
 }
 
 export async function sendPushNotification(payload: {
   title: string; body: string; target_role?: string; target_user_id?: string;
   data?: any; created_by?: string;
 }): Promise<void> {
-  await supabase.from('push_notifications').insert(payload).catch(() => {});
+  try { await supabase.from('push_notifications').insert(payload); } catch {}
 }

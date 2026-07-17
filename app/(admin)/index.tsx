@@ -22,6 +22,7 @@ const ADMIN_SIDEBAR = [
   { icon: 'view-dashboard' as const, label: 'Dashboard', route: '/(admin)' },
   { icon: 'account-group' as const, label: 'Students', route: '/(admin)/students' },
   { icon: 'account-tie' as const, label: 'Teachers', route: '/(admin)/teachers' },
+  { icon: 'file-upload' as const, label: 'Bulk Import', route: '/(admin)/bulk-import' },
   { icon: 'account-off' as const, label: 'Absence Mgmt', route: '/(admin)/absence-management' },
   { icon: 'calendar-clock' as const, label: 'Substitute TT', route: '/(admin)/substitute-timetable' },
   { icon: 'bus-multiple' as const, label: 'Fleet', route: '/(admin)/fleet' },

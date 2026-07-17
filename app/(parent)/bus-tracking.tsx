@@ -6,8 +6,17 @@ import { Colors, Radius, Spacing, Shadows } from '@/constants/theme';
 import { ScreenHeader } from '@/components/layout/ScreenHeader';
 import { getSupabaseClient } from '@/template';
 import { useAuth } from '@/hooks/useAuth';
-import MapView, { Marker } from 'react-native-maps';
 import { fetchParentStudent } from '@/services/schoolData';
+import { Platform } from 'react-native';
+
+let MapView: any = View;
+let Marker: any = View;
+if (Platform.OS !== 'web') {
+  const mapModule = 'react-native-maps';
+  const Maps = require(mapModule);
+  MapView = Maps.default;
+  Marker = Maps.Marker;
+}
 
 const supabase = getSupabaseClient();
 

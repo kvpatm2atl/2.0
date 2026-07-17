@@ -106,7 +106,7 @@ export function ResponsiveGrid({
       {React.Children.map(children, (child) => {
         if (!React.isValidElement(child)) return child;
         return (
-          <View style={{ width: layout.cardWidth }}>
+          <View style={{ width: layout.cardWidth as any }}>
             {child}
           </View>
         );

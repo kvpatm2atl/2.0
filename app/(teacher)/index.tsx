@@ -13,11 +13,24 @@ import { Colors, Radius, Shadows, Spacing } from '@/constants/theme';
 import { useAuth } from '@/hooks/useAuth';
 // Real data only — no mock fallbacks
 import { fetchStudents, fetchTodayAttendance } from '@/services/schoolData';
-import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
+import { useResponsive } from '@/hooks/useResponsive';
+
+const TEACHER_SIDEBAR = [
+  { icon: 'view-dashboard' as const, label: 'Dashboard', route: '/(teacher)' },
+  { icon: 'account-group' as const, label: 'Students', route: '/(teacher)/students' },
+  { icon: 'timetable' as const, label: 'Timetable', route: '/(teacher)/timetable' },
+  { icon: 'clipboard-text' as const, label: 'Homework', route: '/(teacher)/homework' },
+  { icon: 'notebook-edit' as const, label: 'Diary', route: '/(teacher)/diary' },
+  { icon: 'book-edit' as const, label: 'Lesson Plan', route: '/(teacher)/lesson' },
+  { icon: 'brain' as const, label: 'AI Assistant', route: '/(teacher)/ai' },
+  { icon: 'star-circle' as const, label: 'Special Module', route: '/(teacher)/special-module' },
+  { icon: 'account-circle' as const, label: 'Profile', route: '/(teacher)/profile' },
+];
 
 export default function TeacherDashboard() {
   const { user } = useAuth();
   const router = useRouter();
+  const layout = useResponsive();
 
   const isClassTeacher = !!user?.classTeacherOf;
   const myClass = user?.classTeacherOf ?? user?.section ?? '10A';
@@ -51,9 +64,9 @@ export default function TeacherDashboard() {
   const absent = totalStudents - presentCount;
 
   return (
+    <ResponsiveContainer sidebarItems={TEACHER_SIDEBAR} activeRoute="/(teacher)">
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
       <SafeAreaView edges={['top']} style={{ backgroundColor: Colors.primaryDark }}>
-        <ResponsiveContainer maxWidth={600}>
         <LinearGradient colors={[Colors.primaryDark, Colors.primary]} style={styles.hero}>
           <View style={styles.heroRow}>
             <View style={{ flex: 1 }}>
@@ -84,11 +97,9 @@ export default function TeacherDashboard() {
             )}
           </View>
         </LinearGradient>
-        </ResponsiveContainer>
       </SafeAreaView>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <ResponsiveContainer maxWidth={600}>
         {/* Stats */}
         <View style={styles.statsGrid}>
           <StatCard label="Present" value={`${presentCount}/${totalStudents}`} icon="account-check" tone={Colors.success} bg={Colors.successBg} />
@@ -277,9 +288,9 @@ export default function TeacherDashboard() {
             <Text style={styles.tileLabel}>Special Module</Text>
           </Pressable>
         </View>
-        </ResponsiveContainer>
       </ScrollView>
     </View>
+    </ResponsiveContainer>
   );
 }
 

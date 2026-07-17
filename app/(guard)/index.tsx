@@ -13,11 +13,18 @@ import { useAuth } from '@/hooks/useAuth';
 const supabase = getSupabaseClient();
 
 export default function GuardIndex() {
-  const { user, signOut } = useAuth();
+  const { user, logout } = useAuth();
   const [studentId, setStudentId] = useState('');
   const [loading, setLoading] = useState(false);
   const [student, setStudent] = useState<any>(null);
   const { showAlert } = useAlert();
+
+  const handleLogout = () => {
+    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Sign Out', style: 'destructive', onPress: logout },
+    ]);
+  };
 
   const handleSearch = async () => {
     if (!studentId.trim()) {
